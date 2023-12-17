@@ -15,13 +15,6 @@ MODULEINFO getModuleInfo(const char* szModule) {
     return modInfo;
 }
 
-void WriteToMemory(uintptr_t addressToWrite, char* valueToWrite, int byteNum) {
-    DWORD oldProtection;
-    VirtualProtect((LPVOID)(addressToWrite), byteNum, PAGE_EXECUTE_READWRITE, &oldProtection);
-    memcpy((LPVOID)addressToWrite, valueToWrite, byteNum);
-    VirtualProtect((LPVOID)(addressToWrite), byteNum, oldProtection, NULL);
-}
-
 DWORD FindPattern(const char* module, const char* pattern, const char* mask) {
     MODULEINFO mInfo = getModuleInfo(module);
     uintptr_t base = reinterpret_cast<uintptr_t>(GetModuleHandle(NULL));
