@@ -5,8 +5,14 @@
 
 using namespace std;
 
-typedef void(_cdecl* _ForceGamePause)(bool state);
-_ForceGamePause forceGamePause;
+typedef __int64(_cdecl* _ChangeGun)(int gun, __int64 fpsent);
+_ChangeGun changeGun;
+
+typedef __int64(_cdecl* _HudPlayer)();
+_HudPlayer hudPlayer;
+
+typedef __int64(_cdecl* _SndConMsg)(__int64 a1, const char* a2, ...);
+_SndConMsg sndConMsg;
 
 DWORD WINAPI MainThread(HMODULE hModule) {
     AllocConsole();
@@ -16,14 +22,21 @@ DWORD WINAPI MainThread(HMODULE hModule) {
 
     while (true) {
         if (GetAsyncKeyState(VK_NUMPAD1) & 1) {
-            DWORD forceGamePauseAddress = FindPattern("sauerbraten.exe", "\x48\x83\xec\x00\x38\x0d\x00\x00\x00\x00\x74\x00\x33\xc0", "xxx?xx????x?xx");
-            forceGamePause = (_ForceGamePause)(modBase + forceGamePauseAddress);
-            std::cout << forceGamePauseAddress << endl;
-            forceGamePause(1);
+            DWORD changeGunAddy = FindPattern("sauerbraten.exe", "\x48\x89\x5C\x24\x08\x57\x48\x83\xEC\x50\x48\x8B\xDA\x8B", "xxxxxxxxxxxxxx");
+            DWORD hudPlayerAddy = FindPattern("sauerbraten.exe", "\x83\x3D\xCC\xCC\xCC\xCC\xCC\x74\x08\x48\x8B\x05", "xx?????xxxxx");
+            std::cout << changeGunAddy << endl;
+            std::cout << hudPlayerAddy << endl;
+            changeGun = (_ChangeGun)(modBase + changeGunAddy);
+            hudPlayer = (_HudPlayer)(modBase + hudPlayerAddy);
+            __int64 fpsent = hudPlayer();
+            std::cout << fpsent << endl;
+            changeGun(1,fpsent);
         }
         if (GetAsyncKeyState(VK_NUMPAD2) & 1) {
-            forceGamePause = (_ForceGamePause)(modBase + 0XAB950);
-            forceGamePause(1);
+            DWORD sndConMsgAddy = FindPattern("sauerbraten.exe", "\x48\x89\x54\x24\x10\x4C\x89\x44\x24\x18\x4C\x89\x4C\x24\x20\x48\x83\xEC\x28\x4C", "xxxxxxxxxxxxxxxxxxxx");
+            std::cout << sndConMsgAddy << endl;
+            sndConMsg = (_SndConMsg)(modBase + sndConMsgAddy);
+            sndConMsg(4,"PPAP MAN!!");
         }
     }
     fclose(f);
