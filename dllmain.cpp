@@ -22,7 +22,7 @@ DWORD WINAPI MainThread(HMODULE hModule) {
 
     while (true) {
         if (GetAsyncKeyState(VK_NUMPAD1) & 1) {
-            DWORD changeGunAddy = FindPattern("sauerbraten.exe", "\x48\x89\x5C\x24\x08\x57\x48\x83\xEC\x50\x48\x8B\xDA\x8B", "xxxxxxxxxxxxxx");
+            DWORD changeGunAddy = FindPattern("sauerbraten.exe", "\x48\x89\x5C\x24\x08\x57\x48\x83\xEC\x50\x48\x8B\xDA\x8B", "xxxxxxxxxxxxxx"); // I am aware there are no unknown chars in the sig
             DWORD hudPlayerAddy = FindPattern("sauerbraten.exe", "\x83\x3D\xCC\xCC\xCC\xCC\xCC\x74\x08\x48\x8B\x05", "xx?????xxxxx");
             std::cout << changeGunAddy << endl;
             std::cout << hudPlayerAddy << endl;
@@ -33,7 +33,7 @@ DWORD WINAPI MainThread(HMODULE hModule) {
             changeGun(1,fpsent);
         }
         if (GetAsyncKeyState(VK_NUMPAD2) & 1) {
-            DWORD sndConMsgAddy = FindPattern("sauerbraten.exe", "\x48\x89\x54\x24\x10\x4C\x89\x44\x24\x18\x4C\x89\x4C\x24\x20\x48\x83\xEC\x28\x4C", "xxxxxxxxxxxxxxxxxxxx");
+            DWORD sndConMsgAddy = FindPattern("sauerbraten.exe", "\x48\x89\x54\x24\x10\x4C\x89\x44\x24\x18\x4C\x89\x4C\x24\x20\x48\x83\xEC\x28\x4C", "xxxxxxxxxxxxxxxxxxxx"); // I am aware there are no unknown chars in the sig
             std::cout << sndConMsgAddy << endl;
             sndConMsg = (_SndConMsg)(modBase + sndConMsgAddy);
             sndConMsg(4,"PPAP MAN!!");
